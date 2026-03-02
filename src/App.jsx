@@ -71,7 +71,11 @@ export default function App() {
   return (
     <div className={`min-h-screen font-sans selection:bg-blue-200 ${darkMode ? 'dark bg-slate-900 text-slate-100' : 'bg-slate-50 text-slate-900'}`}>
       {view === 'public' ? (
-        <PublicSite onSwitchView={() => setView('admin')} />
+        <PublicSite 
+          onSwitchView={() => setView('admin')} 
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+        />
       ) : (
         <AdminDashboard 
           onSwitchView={() => setView('public')} 
@@ -84,7 +88,7 @@ export default function App() {
 }
 
 // --- PUBLIC SITE COMPONENT ---
-function PublicSite({ onSwitchView }) {
+function PublicSite({ onSwitchView, darkMode, setDarkMode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar el modal
   const [selectedService, setSelectedService] = useState(""); // Nuevo estado para preseleccionar servicio
@@ -157,41 +161,57 @@ function PublicSite({ onSwitchView }) {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
       {/* Navbar */}
-      <nav className="bg-white shadow-sm sticky top-0 z-50">
+      <nav className="bg-white dark:bg-slate-800 shadow-sm sticky top-0 z-50 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-20 items-center">
             <div className="flex items-center gap-2">
               <div className="bg-blue-600 p-2 rounded-lg">
                 <Tool className="w-6 h-6 text-white" />
               </div>
-              <span className="font-bold text-2xl tracking-tight text-slate-800">SERTEG</span>
+              <span className="font-bold text-2xl tracking-tight text-slate-800 dark:text-white">SERTEG</span>
             </div>
             
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center space-x-8">
-              <a href="#" className="text-slate-600 hover:text-blue-600 font-medium transition-colors">Inicio</a>
-              <a href="#servicios" className="text-slate-600 hover:text-blue-600 font-medium transition-colors">Servicios</a>
-              <a href="#nosotros" className="text-slate-600 hover:text-blue-600 font-medium transition-colors">Nosotros</a>
+              <a href="#" className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">Inicio</a>
+              <a href="#servicios" className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">Servicios</a>
+              <a href="#nosotros" className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">Nosotros</a>
+              
+              {/* Dark Mode Toggle */}
+              <button 
+                onClick={() => setDarkMode(!darkMode)}
+                className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                title={darkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+              >
+                {darkMode ? <Sun className="w-5 h-5" /> : <div className="w-5 h-5 bg-slate-800 rounded-full" />} 
+              </button>
+
               <button 
                 onClick={onSwitchView}
-                className="bg-slate-100 text-slate-700 px-4 py-2 rounded-lg font-medium hover:bg-slate-200 transition-colors flex items-center gap-2"
+                className="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-2 rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors flex items-center gap-2"
               >
                 <LayoutDashboard className="w-4 h-4" />
                 Portal Interno
               </button>
               <button 
                 onClick={() => handleOpenModal()}
-                className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200"
+                className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200 dark:shadow-none"
               >
                 Cotizar Servicio
               </button>
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center">
-              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-slate-600 z-50 relative">
+            <div className="md:hidden flex items-center gap-4">
+              <button 
+                onClick={() => setDarkMode(!darkMode)}
+                className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+              >
+                {darkMode ? <Sun className="w-5 h-5" /> : <div className="w-5 h-5 bg-slate-800 rounded-full" />}
+              </button>
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-slate-600 dark:text-slate-300 z-50 relative">
                 {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
             </div>
@@ -201,23 +221,23 @@ function PublicSite({ onSwitchView }) {
         {/* Mobile Sidebar Menu */}
         <div className={`fixed inset-0 bg-slate-900/50 z-40 transition-opacity duration-300 md:hidden ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setIsMenuOpen(false)}></div>
         
-        <div className={`fixed top-0 right-0 h-full w-64 bg-white shadow-2xl z-40 transform transition-transform duration-300 ease-in-out md:hidden ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className={`fixed top-0 right-0 h-full w-64 bg-white dark:bg-slate-800 shadow-2xl z-40 transform transition-transform duration-300 ease-in-out md:hidden ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="flex flex-col h-full pt-24 px-6 pb-6 space-y-6">
-            <a href="#" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-slate-700 hover:text-blue-600 transition-colors border-b border-slate-100 pb-2">Inicio</a>
-            <a href="#servicios" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-slate-700 hover:text-blue-600 transition-colors border-b border-slate-100 pb-2">Servicios</a>
-            <a href="#nosotros" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-slate-700 hover:text-blue-600 transition-colors border-b border-slate-100 pb-2">Nosotros</a>
+            <a href="#" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors border-b border-slate-100 dark:border-slate-700 pb-2">Inicio</a>
+            <a href="#servicios" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors border-b border-slate-100 dark:border-slate-700 pb-2">Servicios</a>
+            <a href="#nosotros" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors border-b border-slate-100 dark:border-slate-700 pb-2">Nosotros</a>
             
             <div className="mt-auto space-y-4">
               <button 
                 onClick={() => { setIsMenuOpen(false); onSwitchView(); }}
-                className="w-full bg-slate-100 text-slate-700 px-4 py-3 rounded-lg font-medium hover:bg-slate-200 transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-3 rounded-lg font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors flex items-center justify-center gap-2"
               >
                 <LayoutDashboard className="w-4 h-4" />
                 Portal Interno
               </button>
               <button 
                 onClick={() => { setIsMenuOpen(false); handleOpenModal(); }}
-                className="w-full bg-blue-600 text-white px-5 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200"
+                className="w-full bg-blue-600 text-white px-5 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200 dark:shadow-none"
               >
                 Cotizar Servicio
               </button>
@@ -227,7 +247,7 @@ function PublicSite({ onSwitchView }) {
       </nav>
 
       {/* Hero Section */}
-      <div className="relative bg-slate-50 overflow-hidden">
+      <div className="relative bg-slate-50 dark:bg-slate-900 overflow-hidden transition-colors duration-300">
         {/* Background decorative elements */}
         <div className="absolute top-0 -left-4 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
         <div className="absolute top-0 -right-4 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse" style={{animationDelay: '2s'}}></div>
@@ -238,42 +258,42 @@ function PublicSite({ onSwitchView }) {
             
             {/* Left Column: Text Content */}
             <div className="flex flex-col items-start text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-blue-100 shadow-sm text-blue-700 text-sm font-semibold mb-6">
-                <ShieldCheck className="w-4 h-4 text-blue-600" />
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-blue-100 dark:border-slate-700 shadow-sm text-blue-700 dark:text-blue-400 text-sm font-semibold mb-6">
+                <ShieldCheck className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 Técnicos Certificados a tu Servicio
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15]">
                 Soluciones integrales de <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">mantenimiento</span> para tu hogar y empresa
               </h1>
-              <p className="mt-6 text-lg md:text-xl text-slate-600 max-w-lg leading-relaxed">
+              <p className="mt-6 text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-lg leading-relaxed">
                 Desde la reparación de tu refrigerador hasta proyectos industriales de electricidad y paneles solares. Expertos especializados en cada área listos para ayudarte.
               </p>
               
               <div className="mt-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                 <button 
                   onClick={() => handleOpenModal()}
-                  className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 flex items-center justify-center gap-2 hover:-translate-y-1"
+                  className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 dark:shadow-none flex items-center justify-center gap-2 hover:-translate-y-1"
                 >
                   Solicitar un Técnico <ArrowRight className="w-5 h-5" />
                 </button>
                 <button 
                   onClick={() => { document.getElementById('servicios-detallados').scrollIntoView({ behavior: 'smooth' }); }}
-                  className="bg-white text-slate-700 border-2 border-slate-200 px-8 py-4 rounded-xl font-bold text-lg hover:border-slate-300 hover:bg-slate-50 transition-all flex items-center justify-center"
+                  className="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-2 border-slate-200 dark:border-slate-700 px-8 py-4 rounded-xl font-bold text-lg hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all flex items-center justify-center"
                 >
                   Explorar Servicios
                 </button>
               </div>
 
               {/* Trust indicators */}
-              <div className="mt-10 pt-8 border-t border-slate-200 flex items-center gap-8 w-full">
+              <div className="mt-10 pt-8 border-t border-slate-200 dark:border-slate-700 flex items-center gap-8 w-full">
                 <div>
-                  <h4 className="text-3xl font-black text-slate-900">15+</h4>
-                  <p className="text-sm text-slate-500 font-medium">Años de experiencia</p>
+                  <h4 className="text-3xl font-black text-slate-900 dark:text-white">15+</h4>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Años de experiencia</p>
                 </div>
-                <div className="w-px h-12 bg-slate-200"></div>
+                <div className="w-px h-12 bg-slate-200 dark:bg-slate-700"></div>
                 <div>
-                  <h4 className="text-3xl font-black text-slate-900 flex items-center gap-1">4.9 <Star className="w-6 h-6 fill-amber-400 text-amber-400 mb-1"/></h4>
-                  <p className="text-sm text-slate-500 font-medium">Clientes satisfechos</p>
+                  <h4 className="text-3xl font-black text-slate-900 dark:text-white flex items-center gap-1">4.9 <Star className="w-6 h-6 fill-amber-400 text-amber-400 mb-1"/></h4>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Clientes satisfechos</p>
                 </div>
               </div>
             </div>
@@ -292,23 +312,23 @@ function PublicSite({ onSwitchView }) {
               </div>
 
               {/* Floating Card 1: Garantía */}
-              <div className="absolute -bottom-6 -left-4 sm:-left-8 bg-white p-4 sm:p-5 rounded-2xl shadow-xl flex items-center gap-4 border border-slate-100 transition-transform hover:-translate-y-2">
-                <div className="bg-green-100 p-3 rounded-full shrink-0">
-                  <CheckCircle className="text-green-600 w-6 h-6 sm:w-8 sm:h-8"/>
+              <div className="absolute -bottom-6 -left-4 sm:-left-8 bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-2xl shadow-xl flex items-center gap-4 border border-slate-100 dark:border-slate-700 transition-transform hover:-translate-y-2">
+                <div className="bg-green-100 dark:bg-green-900/30 p-3 rounded-full shrink-0">
+                  <CheckCircle className="text-green-600 dark:text-green-400 w-6 h-6 sm:w-8 sm:h-8"/>
                 </div>
                 <div>
-                  <p className="font-bold text-slate-900 text-sm sm:text-base">100% Garantizado</p>
-                  <p className="text-xs sm:text-sm text-slate-500">Repuestos originales</p>
+                  <p className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">100% Garantizado</p>
+                  <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Repuestos originales</p>
                 </div>
               </div>
 
               {/* Floating Card 2: Respuesta Rápida */}
-              <div className="absolute top-10 -right-4 sm:-right-8 bg-white p-3 sm:p-4 rounded-2xl shadow-xl flex items-center gap-3 border border-slate-100 transition-transform hover:-translate-y-2">
-                <div className="bg-blue-100 p-2 rounded-full shrink-0">
-                  <Clock className="text-blue-600 w-5 h-5"/>
+              <div className="absolute top-10 -right-4 sm:-right-8 bg-white dark:bg-slate-800 p-3 sm:p-4 rounded-2xl shadow-xl flex items-center gap-3 border border-slate-100 dark:border-slate-700 transition-transform hover:-translate-y-2">
+                <div className="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-full shrink-0">
+                  <Clock className="text-blue-600 dark:text-blue-400 w-5 h-5"/>
                 </div>
                 <div>
-                  <p className="font-bold text-slate-900 text-xs sm:text-sm">Respuesta Rápida</p>
+                  <p className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm">Respuesta Rápida</p>
                 </div>
               </div>
             </div>
@@ -318,21 +338,21 @@ function PublicSite({ onSwitchView }) {
       </div>
 
       {/* Services Section */}
-      <div id="servicios" className="py-24 bg-slate-50">
+      <div id="servicios" className="py-24 bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Especialistas en cada detalle</h2>
-            <p className="text-lg text-slate-600">No somos "todólogos". Asignamos al técnico experto específico para el problema que tienes, garantizando un trabajo de primera.</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">Especialistas en cada detalle</h2>
+            <p className="text-lg text-slate-600 dark:text-slate-300">No somos "todólogos". Asignamos al técnico experto específico para el problema que tienes, garantizando un trabajo de primera.</p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, idx) => (
-              <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
-                <div className="bg-slate-50 w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <div key={idx} className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow group">
+                <div className="bg-slate-50 dark:bg-slate-700 w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   {service.icon}
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">{service.title}</h3>
-                <p className="text-slate-600 leading-relaxed">{service.desc}</p>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{service.title}</h3>
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">{service.desc}</p>
               </div>
             ))}
           </div>
@@ -340,39 +360,39 @@ function PublicSite({ onSwitchView }) {
       </div>
 
       {/* Detailed Services Sections */}
-      <div id="servicios-detallados" className="py-12 bg-white">
+      <div id="servicios-detallados" className="py-12 bg-white dark:bg-slate-800 transition-colors duration-300">
         {detailedServices.map((service, idx) => (
-          <div key={service.id} className={`py-16 ${idx % 2 !== 0 ? 'bg-slate-50' : 'bg-white'}`}>
+          <div key={service.id} className={`py-16 ${idx % 2 !== 0 ? 'bg-slate-50 dark:bg-slate-900' : 'bg-white dark:bg-slate-800'} transition-colors duration-300`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className={`flex flex-col ${service.reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-12`}>
                 
                 {/* Image side */}
                 <div className="w-full lg:w-1/2 relative">
-                  <div className="absolute inset-0 bg-blue-600/10 rounded-3xl transform translate-x-4 translate-y-4"></div>
+                  <div className="absolute inset-0 bg-blue-600/10 dark:bg-blue-600/20 rounded-3xl transform translate-x-4 translate-y-4"></div>
                   {service.images ? (
                     <ImageCarousel images={service.images} altTitle={service.title} />
                   ) : (
                     <img 
                       src={service.image} 
                       alt={service.title}
-                      className="relative rounded-3xl w-full h-80 lg:h-[450px] object-cover shadow-lg border-4 border-white"
+                      className="relative rounded-3xl w-full h-80 lg:h-[450px] object-cover shadow-lg border-4 border-white dark:border-slate-700"
                     />
                   )}
                 </div>
 
                 {/* Content side */}
                 <div className="w-full lg:w-1/2 flex flex-col items-start">
-                  <div className="bg-white p-3 rounded-xl shadow-sm border border-slate-100 mb-6 inline-flex">
+                  <div className="bg-white dark:bg-slate-700 p-3 rounded-xl shadow-sm border border-slate-100 dark:border-slate-600 mb-6 inline-flex">
                     {service.icon}
                   </div>
-                  <h3 className="text-3xl font-extrabold text-slate-900 mb-4">{service.title}</h3>
-                  <p className="text-lg text-slate-600 mb-8 leading-relaxed">
+                  <h3 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">{service.title}</h3>
+                  <p className="text-lg text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">
                     {service.desc}
                   </p>
                   
                   <ul className="space-y-4 mb-8 w-full">
                     {service.features.map((feat, i) => (
-                      <li key={i} className="flex items-center gap-3 text-slate-700 font-medium">
+                      <li key={i} className="flex items-center gap-3 text-slate-700 dark:text-slate-300 font-medium">
                         <CheckCircle className="w-5 h-5 text-blue-500 shrink-0" />
                         {feat}
                       </li>
@@ -381,7 +401,7 @@ function PublicSite({ onSwitchView }) {
 
                   <button 
                     onClick={() => handleOpenModal(service.id)}
-                    className="inline-flex items-center gap-2 bg-slate-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors"
+                    className="inline-flex items-center gap-2 bg-slate-900 dark:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 dark:hover:bg-blue-700 transition-colors"
                   >
                     Cotizar {service.title} <ArrowRight className="w-4 h-4" />
                   </button>
@@ -394,42 +414,42 @@ function PublicSite({ onSwitchView }) {
       </div>
 
       {/* About Us Section (Nosotros) */}
-      <div id="nosotros" className="py-24 bg-white">
+      <div id="nosotros" className="py-24 bg-white dark:bg-slate-800 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Conoce a SERTEG</h2>
-            <p className="text-lg text-slate-600">Más de una década brindando soluciones confiables y construyendo relaciones duraderas con nuestros clientes.</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">Conoce a SERTEG</h2>
+            <p className="text-lg text-slate-600 dark:text-slate-300">Más de una década brindando soluciones confiables y construyendo relaciones duraderas con nuestros clientes.</p>
           </div>
           
           <div className="grid md:grid-cols-2 gap-12">
             {/* Nuestra Historia */}
-            <div className="bg-slate-50 p-10 rounded-3xl border border-slate-100 hover:shadow-lg transition-shadow">
+            <div className="bg-slate-50 dark:bg-slate-700 p-10 rounded-3xl border border-slate-100 dark:border-slate-600 hover:shadow-lg transition-shadow">
               <div className="flex items-center gap-4 mb-6">
-                <div className="bg-blue-100 p-3 rounded-xl text-blue-700">
+                <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-xl text-blue-700 dark:text-blue-300">
                   <Award className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900">Nuestra Historia</h3>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Nuestra Historia</h3>
               </div>
-              <p className="text-slate-600 leading-relaxed mb-4">
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
                 Hace más de 15 años, SERTEG nació con una misión clara: ofrecer un servicio técnico en el que la gente realmente pudiera confiar. Empezamos como un pequeño taller reparando electrodomésticos y, gracias a la recomendación directa de nuestros clientes y nuestro compromiso con la honestidad, crecimos hasta convertirnos en una empresa de servicios integrales.
               </p>
-              <p className="text-slate-600 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
                 Hoy, no solo mantenemos la línea blanca de tu hogar en perfecto estado, sino que ejecutamos proyectos eléctricos para empresas y lideramos la transición hacia la energía solar. Nuestra filosofía sigue intacta: resolver tus problemas con rapidez y calidad garantizada.
               </p>
             </div>
 
             {/* Un Equipo de Expertos */}
-            <div className="bg-slate-50 p-10 rounded-3xl border border-slate-100 hover:shadow-lg transition-shadow">
+            <div className="bg-slate-50 dark:bg-slate-700 p-10 rounded-3xl border border-slate-100 dark:border-slate-600 hover:shadow-lg transition-shadow">
               <div className="flex items-center gap-4 mb-6">
-                <div className="bg-indigo-100 p-3 rounded-xl text-indigo-700">
+                <div className="bg-indigo-100 dark:bg-indigo-900/30 p-3 rounded-xl text-indigo-700 dark:text-indigo-300">
                   <UserCheck className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900">Un Equipo de Expertos</h3>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Un Equipo de Expertos</h3>
               </div>
-              <p className="text-slate-600 leading-relaxed mb-4">
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
                 En SERTEG no creemos en los "todólogos", creemos en la especialización profunda. Nuestro equipo está conformado por técnicos certificados que dedican su carrera a dominar un área específica: desde ingenieros eléctricos y expertos en refrigeración, hasta instaladores de paneles solares.
               </p>
-              <p className="text-slate-600 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
                 Cuando un técnico de SERTEG llega a tu domicilio o empresa, tienes la tranquilidad de recibir a un profesional uniformado, en constante capacitación y respaldado por una empresa seria que asume total responsabilidad de cada trabajo. Tu seguridad es nuestra prioridad.
               </p>
             </div>
@@ -523,16 +543,16 @@ function PublicSite({ onSwitchView }) {
       {/* Request Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex justify-center items-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             {/* Modal Header */}
-            <div className="bg-slate-50 border-b border-slate-100 px-6 py-4 flex justify-between items-center">
-              <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2">
-                <Tool className="w-5 h-5 text-blue-600" />
+            <div className="bg-slate-50 dark:bg-slate-700 border-b border-slate-100 dark:border-slate-600 px-6 py-4 flex justify-between items-center">
+              <h3 className="font-bold text-lg text-slate-800 dark:text-white flex items-center gap-2">
+                <Tool className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 Solicitar Servicio
               </h3>
               <button 
                 onClick={() => setIsModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-md hover:bg-slate-200"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1 rounded-md hover:bg-slate-200 dark:hover:bg-slate-600"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -540,28 +560,28 @@ function PublicSite({ onSwitchView }) {
             
             {/* Modal Body (Form) */}
             <div className="p-6">
-              <p className="text-sm text-slate-600 mb-6">
+              <p className="text-sm text-slate-600 dark:text-slate-300 mb-6">
                 Déjanos tus datos y un técnico especializado se pondrá en contacto contigo lo antes posible para brindarte una cotización.
               </p>
               
               <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setIsModalOpen(false); alert("¡Solicitud enviada con éxito!"); }}>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Nombre Completo</label>
-                  <input type="text" required className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="Ej. Juan Pérez" />
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nombre Completo</label>
+                  <input type="text" required className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="Ej. Juan Pérez" />
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Teléfono</label>
-                    <input type="tel" required className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="(000) 000-0000" />
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Teléfono</label>
+                    <input type="tel" required className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="(000) 000-0000" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Tipo de Servicio</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tipo de Servicio</label>
                     <select 
                       required 
                       value={selectedService}
                       onChange={(e) => setSelectedService(e.target.value)}
-                      className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white"
+                      className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white"
                     >
                       <option value="">Selecciona uno...</option>
                       <option value="linea-blanca">Línea Blanca</option>
@@ -574,8 +594,8 @@ function PublicSite({ onSwitchView }) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Detalles del problema o proyecto</label>
-                  <textarea rows="3" required className="w-full px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none" placeholder="Describe brevemente lo que necesitas..."></textarea>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Detalles del problema o proyecto</label>
+                  <textarea rows="3" required className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none" placeholder="Describe brevemente lo que necesitas..."></textarea>
                 </div>
 
                 {/* Modal Footer */}
@@ -583,13 +603,13 @@ function PublicSite({ onSwitchView }) {
                   <button 
                     type="button" 
                     onClick={() => setIsModalOpen(false)}
-                    className="px-5 py-2 rounded-lg font-medium text-slate-600 hover:bg-slate-100 transition-colors"
+                    className="px-5 py-2 rounded-lg font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                   >
                     Cancelar
                   </button>
                   <button 
                     type="submit" 
-                    className="px-5 py-2 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-md shadow-blue-200"
+                    className="px-5 py-2 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-md shadow-blue-200 dark:shadow-none"
                   >
                     Enviar Solicitud
                   </button>
