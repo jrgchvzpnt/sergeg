@@ -92,10 +92,38 @@ function PublicSite({ onSwitchView, darkMode, setDarkMode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar el modal
   const [selectedService, setSelectedService] = useState(""); // Nuevo estado para preseleccionar servicio
+  const [formData, setFormData] = useState({ name: '', phone: '', details: '' });
 
   const handleOpenModal = (serviceId = "") => {
     setSelectedService(serviceId);
     setIsModalOpen(true);
+  };
+
+  const handleWhatsAppSubmit = (e) => {
+    e.preventDefault();
+    
+    // Map service ID to readable name
+    const serviceMap = {
+      "linea-blanca": "Línea Blanca",
+      "aire": "Aire Acondicionado",
+      "electricidad-plomeria": "Electricidad y Plomería",
+      "paneles": "Paneles Solares",
+      "venta": "Venta de Equipos"
+    };
+
+    const serviceName = serviceMap[selectedService] || selectedService || "General";
+
+    const message = `Hola, me gustaría cotizar un servicio en SERTEG.%0A%0A` +
+                    `*Nombre:* ${formData.name}%0A` +
+                    `*Teléfono:* ${formData.phone}%0A` +
+                    `*Servicio:* ${serviceName}%0A` +
+                    `*Detalles:* ${formData.details}`;
+
+    const whatsappUrl = `https://wa.me/526673312378?text=${message}`;
+    
+    window.open(whatsappUrl, '_blank');
+    setIsModalOpen(false);
+    setFormData({ name: '', phone: '', details: '' }); // Reset form
   };
 
   const services = [
@@ -103,7 +131,7 @@ function PublicSite({ onSwitchView, darkMode, setDarkMode }) {
     { icon: <Wind className="w-8 h-8 text-blue-600" />, title: "Aire Acondicionado", desc: "Instalación y mantenimiento de equipos mini-split y centrales." },
     { icon: <Droplet className="w-8 h-8 text-blue-600" />, title: "Plomería y Fontanería", desc: "Solución a fugas, instalación de tuberías y mantenimiento general." },
     { icon: <Zap className="w-8 h-8 text-blue-600" />, title: "Electricidad", desc: "Cableado, reparación de cortos circuitos y proyectos eléctricos para empresas." },
-    { icon: <Sun className="w-8 h-8 text-green-500" />, title: "Paneles Solares", desc: "Transición a energía limpia con instalación y mantenimiento de celdas solares." },
+    { icon: <Sun className="w-8 h-8 text-slate-400" />, title: "Paneles Solares", desc: "Próximamente: Transición a energía limpia con instalación y mantenimiento de celdas solares.", comingSoon: true },
     { icon: <ShoppingCart className="w-8 h-8 text-blue-600" />, title: "Venta de Equipos", desc: "Comercialización de equipos nuevos y seminuevos con garantía SERTEG." }
   ];
 
@@ -139,11 +167,12 @@ function PublicSite({ onSwitchView, darkMode, setDarkMode }) {
     {
       id: "paneles",
       title: "Paneles Solares",
-      desc: "Únete a la transición energética. Diseñamos, instalamos y damos mantenimiento a sistemas de energía solar para que reduzcas drásticamente tu recibo de luz mientras cuidas el planeta.",
-      features: ["Estudio de Consumo Eléctrico", "Instalación de Paneles (Residencial/Industrial)", "Mantenimiento y Limpieza de Celdas", "Gestión de Trámites ante CFE"],
+      desc: "Estamos trabajando para traer esta solución muy pronto. Nuestro equipo se está capacitando para ofrecerte la mejor tecnología en energía solar y ayudarte a reducir tu consumo eléctrico.",
+      features: ["Estudio de Consumo Eléctrico (Próximamente)", "Instalación Certificada (Próximamente)", "Ahorro Energético Garantizado"],
       image: "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=1000&auto=format&fit=crop",
-      icon: <Sun className="w-6 h-6 text-green-500" />,
-      reverse: true
+      icon: <Sun className="w-6 h-6 text-slate-400" />,
+      reverse: true,
+      comingSoon: true
     },
     {
       id: "venta",
@@ -266,7 +295,7 @@ function PublicSite({ onSwitchView, darkMode, setDarkMode }) {
                 Soluciones integrales de <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">mantenimiento</span> para tu hogar y empresa
               </h1>
               <p className="mt-6 text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-lg leading-relaxed">
-                Desde la reparación de tu refrigerador hasta proyectos industriales de electricidad y paneles solares. Expertos especializados en cada área listos para ayudarte.
+                Somos una empresa basada 100% en la confianza y entregamos todo en cuestión de calidad, capacidad y experiencia. Ofrecemos confianza, calidad y eficiencia en cada servicio.
               </p>
               
               <div className="mt-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
@@ -287,13 +316,13 @@ function PublicSite({ onSwitchView, darkMode, setDarkMode }) {
               {/* Trust indicators */}
               <div className="mt-10 pt-8 border-t border-slate-200 dark:border-slate-700 flex items-center gap-8 w-full">
                 <div>
-                  <h4 className="text-3xl font-black text-slate-900 dark:text-white">15+</h4>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Años de experiencia</p>
+                  <h4 className="text-3xl font-black text-slate-900 dark:text-white">11</h4>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Años como Empresa</p>
                 </div>
                 <div className="w-px h-12 bg-slate-200 dark:bg-slate-700"></div>
                 <div>
-                  <h4 className="text-3xl font-black text-slate-900 dark:text-white flex items-center gap-1">4.9 <Star className="w-6 h-6 fill-amber-400 text-amber-400 mb-1"/></h4>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Clientes satisfechos</p>
+                  <h4 className="text-3xl font-black text-slate-900 dark:text-white flex items-center gap-1">20+</h4>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Años de Experiencia Técnica</p>
                 </div>
               </div>
             </div>
@@ -342,12 +371,17 @@ function PublicSite({ onSwitchView, darkMode, setDarkMode }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">Especialistas en cada detalle</h2>
-            <p className="text-lg text-slate-600 dark:text-slate-300">No somos "todólogos". Asignamos al técnico experto específico para el problema que tienes, garantizando un trabajo de primera.</p>
+            <p className="text-lg text-slate-600 dark:text-slate-300">Somos una empresa basada 100% en la confianza y se entrega todo en cuestión de calidad, capacidad y experiencia.</p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, idx) => (
-              <div key={idx} className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow group">
+              <div key={idx} className={`bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:shadow-md transition-shadow group relative overflow-hidden ${service.comingSoon ? 'opacity-90' : ''}`}>
+                {service.comingSoon && (
+                  <div className="absolute top-4 right-4 bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wide">
+                    Próximamente
+                  </div>
+                )}
                 <div className="bg-slate-50 dark:bg-slate-700 w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   {service.icon}
                 </div>
@@ -385,7 +419,14 @@ function PublicSite({ onSwitchView, darkMode, setDarkMode }) {
                   <div className="bg-white dark:bg-slate-700 p-3 rounded-xl shadow-sm border border-slate-100 dark:border-slate-600 mb-6 inline-flex">
                     {service.icon}
                   </div>
-                  <h3 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-4">{service.title}</h3>
+                  <div className="flex items-center gap-3 mb-4">
+                    <h3 className="text-3xl font-extrabold text-slate-900 dark:text-white">{service.title}</h3>
+                    {service.comingSoon && (
+                      <span className="bg-amber-100 text-amber-800 text-sm font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+                        Próximamente
+                      </span>
+                    )}
+                  </div>
                   <p className="text-lg text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">
                     {service.desc}
                   </p>
@@ -393,17 +434,23 @@ function PublicSite({ onSwitchView, darkMode, setDarkMode }) {
                   <ul className="space-y-4 mb-8 w-full">
                     {service.features.map((feat, i) => (
                       <li key={i} className="flex items-center gap-3 text-slate-700 dark:text-slate-300 font-medium">
-                        <CheckCircle className="w-5 h-5 text-blue-500 shrink-0" />
+                        <CheckCircle className={`w-5 h-5 ${service.comingSoon ? 'text-slate-400' : 'text-blue-500'} shrink-0`} />
                         {feat}
                       </li>
                     ))}
                   </ul>
 
                   <button 
-                    onClick={() => handleOpenModal(service.id)}
-                    className="inline-flex items-center gap-2 bg-slate-900 dark:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 dark:hover:bg-blue-700 transition-colors"
+                    onClick={() => !service.comingSoon && handleOpenModal(service.id)}
+                    disabled={service.comingSoon}
+                    className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-colors ${
+                      service.comingSoon 
+                        ? 'bg-slate-200 text-slate-500 cursor-not-allowed dark:bg-slate-700 dark:text-slate-400' 
+                        : 'bg-slate-900 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-700'
+                    }`}
                   >
-                    Cotizar {service.title} <ArrowRight className="w-4 h-4" />
+                    {service.comingSoon ? 'Disponible Próximamente' : `Cotizar ${service.title}`} 
+                    {!service.comingSoon && <ArrowRight className="w-4 h-4" />}
                   </button>
                 </div>
 
@@ -421,36 +468,52 @@ function PublicSite({ onSwitchView, darkMode, setDarkMode }) {
             <p className="text-lg text-slate-600 dark:text-slate-300">Más de una década brindando soluciones confiables y construyendo relaciones duraderas con nuestros clientes.</p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-12">
-            {/* Nuestra Historia */}
-            <div className="bg-slate-50 dark:bg-slate-700 p-10 rounded-3xl border border-slate-100 dark:border-slate-600 hover:shadow-lg transition-shadow">
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Misión */}
+            <div className="bg-slate-50 dark:bg-slate-700 p-8 rounded-3xl border border-slate-100 dark:border-slate-600 hover:shadow-lg transition-shadow">
               <div className="flex items-center gap-4 mb-6">
                 <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-xl text-blue-700 dark:text-blue-300">
                   <Award className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Nuestra Historia</h3>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Nuestra Misión</h3>
               </div>
               <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
-                Hace más de 15 años, SERTEG nació con una misión clara: ofrecer un servicio técnico en el que la gente realmente pudiera confiar. Empezamos como un pequeño taller reparando electrodomésticos y, gracias a la recomendación directa de nuestros clientes y nuestro compromiso con la honestidad, crecimos hasta convertirnos en una empresa de servicios integrales.
+                Ser la empresa líder en el mercado, siempre basándonos en la confianza y la calidad de entrega a nuestros clientes.
               </p>
               <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                Hoy, no solo mantenemos la línea blanca de tu hogar en perfecto estado, sino que ejecutamos proyectos eléctricos para empresas y lideramos la transición hacia la energía solar. Nuestra filosofía sigue intacta: resolver tus problemas con rapidez y calidad garantizada.
+                Con 11 años de trayectoria como empresa establecida, nos hemos consolidado como un referente de soluciones integrales.
               </p>
             </div>
 
-            {/* Un Equipo de Expertos */}
-            <div className="bg-slate-50 dark:bg-slate-700 p-10 rounded-3xl border border-slate-100 dark:border-slate-600 hover:shadow-lg transition-shadow">
+            {/* Profesionalismo */}
+            <div className="bg-slate-50 dark:bg-slate-700 p-8 rounded-3xl border border-slate-100 dark:border-slate-600 hover:shadow-lg transition-shadow">
               <div className="flex items-center gap-4 mb-6">
                 <div className="bg-indigo-100 dark:bg-indigo-900/30 p-3 rounded-xl text-indigo-700 dark:text-indigo-300">
                   <UserCheck className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Un Equipo de Expertos</h3>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Profesionalismo</h3>
               </div>
               <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
-                En SERTEG no creemos en los "todólogos", creemos en la especialización profunda. Nuestro equipo está conformado por técnicos certificados que dedican su carrera a dominar un área específica: desde ingenieros eléctricos y expertos en refrigeración, hasta instaladores de paneles solares.
+                Entregamos capacidad y técnica en cada tarea realizada. Sumamos más de 20 años de experiencia total como técnicos capacitados.
               </p>
               <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                Cuando un técnico de SERTEG llega a tu domicilio o empresa, tienes la tranquilidad de recibir a un profesional uniformado, en constante capacitación y respaldado por una empresa seria que asume total responsabilidad de cada trabajo. Tu seguridad es nuestra prioridad.
+                Nuestro equipo está en constante actualización para ofrecerte soluciones eficientes y duraderas.
+              </p>
+            </div>
+
+            {/* Confianza */}
+            <div className="bg-slate-50 dark:bg-slate-700 p-8 rounded-3xl border border-slate-100 dark:border-slate-600 hover:shadow-lg transition-shadow">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="bg-green-100 dark:bg-green-900/30 p-3 rounded-xl text-green-700 dark:text-green-300">
+                  <ShieldCheck className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Confianza Total</h3>
+              </div>
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+                Nuestros clientes confían en nosotros porque la honestidad forma parte fundamental de nuestro servicio.
+              </p>
+              <p className="text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                "No hacemos lo que el cliente busca, hacemos lo que el cliente necesita."
               </p>
             </div>
           </div>
@@ -564,16 +627,30 @@ function PublicSite({ onSwitchView, darkMode, setDarkMode }) {
                 Déjanos tus datos y un técnico especializado se pondrá en contacto contigo lo antes posible para brindarte una cotización.
               </p>
               
-              <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setIsModalOpen(false); alert("¡Solicitud enviada con éxito!"); }}>
+              <form className="space-y-4" onSubmit={handleWhatsAppSubmit}>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nombre Completo</label>
-                  <input type="text" required className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="Ej. Juan Pérez" />
+                  <input 
+                    type="text" 
+                    required 
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
+                    placeholder="Ej. Juan Pérez" 
+                  />
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Teléfono</label>
-                    <input type="tel" required className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="(000) 000-0000" />
+                    <input 
+                      type="tel" 
+                      required 
+                      value={formData.phone}
+                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                      className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
+                      placeholder="(000) 000-0000" 
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tipo de Servicio</label>
@@ -581,13 +658,13 @@ function PublicSite({ onSwitchView, darkMode, setDarkMode }) {
                       required 
                       value={selectedService}
                       onChange={(e) => setSelectedService(e.target.value)}
-                      className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white"
+                      className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white dark:bg-slate-700"
                     >
                       <option value="">Selecciona uno...</option>
                       <option value="linea-blanca">Línea Blanca</option>
                       <option value="aire">Aire Acondicionado</option>
                       <option value="electricidad-plomeria">Electricidad y Plomería</option>
-                      <option value="paneles">Paneles Solares</option>
+                      <option value="paneles" disabled>Paneles Solares (Próximamente)</option>
                       <option value="venta">Venta de Equipos</option>
                     </select>
                   </div>
@@ -595,7 +672,14 @@ function PublicSite({ onSwitchView, darkMode, setDarkMode }) {
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Detalles del problema o proyecto</label>
-                  <textarea rows="3" required className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none" placeholder="Describe brevemente lo que necesitas..."></textarea>
+                  <textarea 
+                    rows="3" 
+                    required 
+                    value={formData.details}
+                    onChange={(e) => setFormData({...formData, details: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none" 
+                    placeholder="Describe brevemente lo que necesitas..."
+                  ></textarea>
                 </div>
 
                 {/* Modal Footer */}
@@ -609,9 +693,10 @@ function PublicSite({ onSwitchView, darkMode, setDarkMode }) {
                   </button>
                   <button 
                     type="submit" 
-                    className="px-5 py-2 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-md shadow-blue-200 dark:shadow-none"
+                    className="px-5 py-2 rounded-lg font-medium bg-green-600 text-white hover:bg-green-700 transition-colors shadow-md shadow-green-200 dark:shadow-none flex items-center gap-2"
                   >
-                    Enviar Solicitud
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    Enviar por WhatsApp
                   </button>
                 </div>
               </form>
